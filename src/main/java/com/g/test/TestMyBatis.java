@@ -22,13 +22,30 @@ public class TestMyBatis {
         SqlSession sqlSession = factory.openSession();
         //获取代理对象
         IAccountDao mapper = sqlSession.getMapper(IAccountDao.class);
-//        Account newAccount = new Account();
-//        newAccount.setName("王五");
-//        newAccount.setMoney(220.0);
-//        mapper.saveAccount(newAccount);
         List<Account> all = mapper.findAll();
         for (Account account:all)
             System.out.println(account);
+        //释放资源
+        sqlSession.close();
+        inputStream.close();
+    }
+
+    @Test
+    public void run2() throws Exception {
+        //加载配置文件
+        InputStream inputStream = Resources.getResourceAsStream("SqlMapConfig.xml");
+        //创建工厂
+        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+        //SqlSession对象
+        SqlSession sqlSession = factory.openSession();
+        //获取代理对象
+        IAccountDao mapper = sqlSession.getMapper(IAccountDao.class);
+        Account newAccount = new Account();
+        newAccount.setName("zhaoliu");
+        newAccount.setMoney(90d);
+        mapper.saveAccount(newAccount);
+        //提交事务
+        sqlSession.commit();
         //释放资源
         sqlSession.close();
         inputStream.close();
